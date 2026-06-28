@@ -1,0 +1,3 @@
+docker exec -it mosquitto mosquitto_passwd -c /mosquitto/config/pwfile monUser
+docker exec -it mosquitto mosquitto_sub -t "#" -v 
+docker exec -it mosquitto mosquitto_sub -t "#" -v -u "Brazil" -P "password"

@@ -1,0 +1,11 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "@digital-tvilling/node-red-openapi-generator": "~1.1.1",
+        "@node-red-tools/node-red-contrib-openapi": "~0.4.0",
+        "node-red-contrib-postgresql": "~0.15.4"
+    }
+}

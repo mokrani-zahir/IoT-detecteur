@@ -1,0 +1,78 @@
+# Node.js / Node-RED
+node_modules/
+node_red_data/node_modules/
+node_red_data/.npm/
+node_red_data/lib/
+node_red_data/.config.nodes.json.backup
+node_red_data/.config.runtime.json.backup
+node_red_data/.config.users.json.backup
+node_red_data/flows_cred.json
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Node-RED data à garder (les fichiers importants sont déjà versionnés)
+# On garde : flows.json, .config.*.json, settings.js, package.json
+# On ignore : backups, node_modules, lib, .npm
+
+# PostgreSQL data (VOLUME Docker)
+postgres_data/
+pgdata/
+*.db
+*.sqlite
+
+# Mosquitto data (VOLUME Docker)
+data/
+log/
+mosquitto.db
+mosquitto.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+log/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Secret files
+config/pwfile
+config/mosquitto.conf  # Si il contient des mots de passe
+*.key
+*.pem
+*.crt
+*.p12
+
+# Python (si jamais)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# Arduino (sketch_jun12a)
+sketch_jun12a/*.ino  # Si vous voulez cacher le code Arduino
+# Ou gardez-le si c'est open-source

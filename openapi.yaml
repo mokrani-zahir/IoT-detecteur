@@ -1,0 +1,11 @@
+openapi: 3.0.0
+info:
+  title: Mon API Capteurs
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      summary: Retourne le statut
+      responses:
+        '200':
+          description: Succès

@@ -1,0 +1,50 @@
+services:
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./config:/mosquitto/config
+      - ./data:/mosquitto/data
+      - ./log:/mosquitto/log
+  
+  nodered:
+    build:
+      context: ./dockerfiles
+      dockerfile: node-red.dockerfile
+    container_name: node-red
+    restart: unless-stopped
+    environment:
+    - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node_red_data:/data
+    depends_on:
+      - mqtt
+
+  swagger-ui:
+      image: swaggerapi/swagger-ui
+      container_name: swagger-ui
+      ports:
+        - "8080:8080"
+      environment:
+        # On pointe ici vers l'URL de votre JSON Node-RED
+        URL: "http://localhost:1880/http-api/swagger.json"
+
+  db:
+    image: postgres:16
+    container_name: postgres-node-red
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d

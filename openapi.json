@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Node-RED Capteurs",
+    "version": "1.0.0",
+    "description": "API pour la gestion de mes capteurs PostgreSQL"
+  },
+  "paths": {
+    "/test": {
+      "get": {
+        "summary": "Vérifier si l'API fonctionne",
+        "responses": {
+          "200": {
+            "description": "Succès"
+          }
+        }
+      }
+    },
+    "/donnees": {
+      "post": {
+        "summary": "Ajouter une mesure de capteur",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nom": { "type": "string" },
+                  "valeur": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Donnée enregistrée" }
+        }
+      }
+    }
+  }
+}

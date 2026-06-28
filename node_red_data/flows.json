@@ -1,0 +1,1144 @@
+[
+    {
+        "id": "e4aa9b15e1aa2193",
+        "type": "tab",
+        "label": "MQTT save database",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3431837e7a804560",
+        "type": "tab",
+        "label": "API REST database",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5d73874c786412e2",
+        "type": "tab",
+        "label": "API REST MQTT",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a060db820917f3fe",
+        "type": "mqtt-broker",
+        "name": "Brazil",
+        "broker": "192.168.1.129",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "91e595620c23b1e6",
+        "type": "postgreSQLConfig",
+        "name": "Brazil",
+        "host": "postgres-node-red",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "humidateur_db",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": "360000",
+        "idleFieldType": "num",
+        "connectionTimeout": "100000",
+        "connectionTimeoutFieldType": "num",
+        "user": "admin",
+        "userFieldType": "str",
+        "password": "mysecretpassword",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "e5e46a88eeae43dd",
+        "type": "swagger-doc",
+        "summary": "Récupérer les capteurs",
+        "description": "Cet endpoint permet de récupérer la liste des capteurs enregistrés dans le système.",
+        "tags": "Capteur",
+        "parameters": [
+            {
+                "name": "authorization",
+                "in": "header",
+                "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
+                "required": true,
+                "type": "string"
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "",
+                "schema": {
+                    "properties": {
+                        "msg": {
+                            "type": "string",
+                            "name": "msg",
+                            "propertyRow": true
+                        },
+                        "lot": {
+                            "type": "string",
+                            "name": "lot",
+                            "propertyRow": true
+                        }
+                    }
+                },
+                "code": "200"
+            }
+        },
+        "deprecated": false
+    },
+    {
+        "id": "73ec1064afa22056",
+        "type": "swagger-doc",
+        "summary": "Récupérer les mesures d'un capteur",
+        "description": "Retourne la dernière valeur de température enregistrée pour un lot donné.",
+        "tags": "Capteur",
+        "parameters": [
+            {
+                "name": "lot",
+                "in": "query",
+                "description": "Donner le nom du capteur",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Ajouter une limite du nombre de données à récupérer (par défaut : 10)",
+                "required": false,
+                "type": "number"
+            },
+            {
+                "name": "form",
+                "in": "query",
+                "description": "Date et heure de début pour filtrer les données. (ex: 2026-06-13T00:00:00)",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "to",
+                "in": "query",
+                "description": "Date et heure de fin pour filtrer les données. (ex: 2026-06-13T00:00:00)",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "authorization",
+                "in": "header",
+                "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
+                "required": true,
+                "type": "string"
+            }
+        ],
+        "responses": {
+            "": {
+                "description": "",
+                "schema": {
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "nom": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "number"
+                        },
+                        "date": {
+                            "type": "string"
+                        },
+                        "date_debut": {
+                            "type": "string"
+                        },
+                        "duree_jours": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "deprecated": false
+    },
+    {
+        "id": "82bdf4f05aea1564",
+        "type": "swagger-doc",
+        "summary": "Récupérer les alerts",
+        "description": "Cet endpoint permet de récupérer tous alerts enregistrés dans le système.",
+        "tags": "Alert",
+        "parameters": [
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Ajouter une limite du nombre de données à récupérer (par défaut : 10)",
+                "required": false,
+                "type": "integer"
+            },
+            {
+                "name": "form",
+                "in": "query",
+                "description": "Date et heure de début pour filtrer les données. (ex: 2026-06-13T00:00:00)",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "to",
+                "in": "query",
+                "description": "Date et heure de fin pour filtrer les données. (ex: 2026-06-13T00:00:00)",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "authorization",
+                "in": "header",
+                "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
+                "required": true,
+                "type": "string"
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "",
+                "schema": {
+                    "properties": {
+                        "id": {
+                            "type": "number"
+                        },
+                        "nom": {
+                            "type": "string"
+                        },
+                        "valeur": {
+                            "type": "number"
+                        },
+                        "date": {
+                            "type": "string"
+                        },
+                        "is_checked": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "deprecated": false
+    },
+    {
+        "id": "5f3e82a3ca37bf10",
+        "type": "swagger-doc",
+        "summary": "Récupérer les alerts d'un capteur",
+        "description": "Cet endpoint permet de récupérer tous alerts enregistrés dans le système.",
+        "tags": "Alert",
+        "parameters": [
+            {
+                "name": "authorization",
+                "in": "header",
+                "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
+                "required": true,
+                "type": "string"
+            }
+        ],
+        "responses": {},
+        "deprecated": false
+    },
+    {
+        "id": "0d2747cbd37f45ec",
+        "type": "swagger-doc",
+        "summary": "Changer les paramètres d’alerte",
+        "description": "Permet de modifier les valeurs qui déclenchent une alerte (ex : seuil de température, humidité, etc.).",
+        "tags": "Alert",
+        "parameters": [
+            {
+                "name": "lot",
+                "in": "query",
+                "description": "Donner le nom du capteur",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "max",
+                "in": "query",
+                "description": "Valeur maximale pour déclencher une alerte",
+                "required": false,
+                "type": "number"
+            },
+            {
+                "name": "min",
+                "in": "query",
+                "description": "Valeur minimale pour déclencher une alerte",
+                "required": false,
+                "type": "number"
+            },
+            {
+                "name": "authorization",
+                "in": "header",
+                "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "date_debut",
+                "in": "query",
+                "description": "Date de début de référence pour le calcul de l'expiration (format YYYY-MM-DD). Si omis, la date actuelle sera utilisée lors de la mise à jour.",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "name": "duree_jours",
+                "in": "query",
+                "description": "Durée de validité en jours à partir de la date_debut. Par défaut, 365 jours.",
+                "required": false,
+                "type": "number"
+            }
+        ],
+        "responses": {},
+        "deprecated": false
+    },
+    {
+        "id": "9e34503c940c0a0c",
+        "type": "swagger-doc",
+        "summary": "Génération de jeton JWT",
+        "description": "Génération d’un jeton JWT (JSON Web Token) après l’authentification de l’utilisateur. Ce jeton permet de sécuriser les échanges entre le client et l’API en transportant les informations d’identification et les autorisations de manière signée et vérifiable.",
+        "tags": "JWT",
+        "parameters": [
+            {
+                "name": "username",
+                "in": "query",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "password",
+                "in": "query",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "expiresIn",
+                "in": "query",
+                "description": "Durée de validité du token en secondes. Défaut : 3600 (1 heure).",
+                "required": false,
+                "type": "integer"
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "",
+                "schema": {
+                    "properties": {
+                        "status": {
+                            "type": "string"
+                        },
+                        "token": {
+                            "type": "string"
+                        },
+                        "expiresIn": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "description": "",
+                "schema": {
+                    "properties": {
+                        "status": {
+                            "type": "string"
+                        },
+                        "msg": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "deprecated": false
+    },
+    {
+        "id": "44dafb8a2a37a7f4",
+        "type": "mqtt in",
+        "z": "e4aa9b15e1aa2193",
+        "name": "MQTT",
+        "topic": "#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "a060db820917f3fe",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 310,
+        "y": 460,
+        "wires": [
+            [
+                "05bcb295821a639b"
+            ]
+        ]
+    },
+    {
+        "id": "0254f24c290f2f46",
+        "type": "postgresql",
+        "z": "e4aa9b15e1aa2193",
+        "name": "Base de donnée",
+        "query": "INSERT INTO mesures (nom, valeur, date) VALUES ($1, $2, NOW())",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 800,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "05bcb295821a639b",
+        "type": "function",
+        "z": "e4aa9b15e1aa2193",
+        "name": "Creation requet SQL",
+        "func": "msg.params = [msg.topic, parseFloat(msg.payload)];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 460,
+        "wires": [
+            [
+                "0254f24c290f2f46",
+                "8d6a6c6d6c6cf6f3"
+            ]
+        ]
+    },
+    {
+        "id": "8d6a6c6d6c6cf6f3",
+        "type": "postgresql",
+        "z": "e4aa9b15e1aa2193",
+        "name": "",
+        "query": "SELECT \n    $1::TEXT AS nom, \n    $2::DOUBLE PRECISION AS valeu,\n    CASE \n        WHEN ($2::DOUBLE PRECISION) > max OR ($2::DOUBLE PRECISION) < min THEN true \n        ELSE false \n    END AS alerte\nFROM public.lots \nWHERE nom = $1::TEXT;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 790,
+        "y": 540,
+        "wires": [
+            [
+                "acafc456e7e77851"
+            ]
+        ]
+    },
+    {
+        "id": "acafc456e7e77851",
+        "type": "switch",
+        "z": "e4aa9b15e1aa2193",
+        "name": "",
+        "property": "payload[0].alerte",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 980,
+        "y": 540,
+        "wires": [
+            [
+                "8fc5cb06df1217ac"
+            ]
+        ]
+    },
+    {
+        "id": "8fc5cb06df1217ac",
+        "type": "function",
+        "z": "e4aa9b15e1aa2193",
+        "name": "save alert",
+        "func": "if (msg.payload && msg.payload.length > 0) {\n    let data = msg.payload[0]; // On récupère l'objet dans le tableau\n    \n    // Vous pouvez maintenant manipuler vos variables\n    let nomCapteur = data.nom;\n    let valeurRecue = data.valeu; // Attention, vérifiez si c'est 'valeu' ou 'valeur' dans votre base\n    let estEnAlerte = data.alerte; // Ceci sera true ou false\n    \n    // Exemple : Créer un message spécifique pour une alerte\n    if (estEnAlerte === true) {\n        msg.params = [nomCapteur, parseFloat(valeurRecue)];\n        return msg;\n    }\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 540,
+        "wires": [
+            [
+                "18911ef572c45b75"
+            ]
+        ]
+    },
+    {
+        "id": "18911ef572c45b75",
+        "type": "postgresql",
+        "z": "e4aa9b15e1aa2193",
+        "name": "save alert",
+        "query": "INSERT INTO alerts (nom, valeur, date) VALUES ($1, $2, NOW())",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1320,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6aed58b391679d8b",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "40475b4916360a4a",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/lot",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "e5e46a88eeae43dd",
+        "x": 140,
+        "y": 200,
+        "wires": [
+            [
+                "2a1fb62e4b271127"
+            ]
+        ]
+    },
+    {
+        "id": "8da0c50521b644f5",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Recuper les capteurs",
+        "query": "SELECT DISTINCT ON (nom) * FROM lots ORDER BY nom DESC;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1280,
+        "y": 200,
+        "wires": [
+            [
+                "6aed58b391679d8b"
+            ]
+        ]
+    },
+    {
+        "id": "f840f5e7bda2420d",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/lot/:lot",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "73ec1064afa22056",
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "36a1be992c875243"
+            ]
+        ]
+    },
+    {
+        "id": "e3f77b90e936a758",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les mesures",
+        "query": "SELECT *\nFROM mesures\nWHERE nom = $1\nORDER BY date DESC\nLIMIT $2;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1290,
+        "y": 280,
+        "wires": [
+            [
+                "fa7df65394a057b6"
+            ]
+        ]
+    },
+    {
+        "id": "fa7df65394a057b6",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7b04baa8aa7a7aad",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les paramètres",
+        "func": "let lot = msg.req.params.lot;\n\nlet limit = parseInt(msg.req.query.limit || 10);\nif (isNaN(limit) || limit <= 0) limit = 10;\n\nlet from = msg.req.query.from;\nlet to = msg.req.query.to;\n\n// construire paramètres dynamiques\nmsg.params = [lot];\n\nmsg.useDate = false;\n\n// si date existe → on active filtre\nif (from && to) {\n    msg.useDate = true;\n    msg.params.push(from, to);\n}\n\n// toujours ajouter limit à la fin\nmsg.params.push(limit);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 280,
+        "wires": [
+            [
+                "cb809e9ad3d54438"
+            ]
+        ]
+    },
+    {
+        "id": "64b1c1e9382bd484",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les mesures par plage",
+        "query": "SELECT *\nFROM mesures\nWHERE nom = $1\nAND date BETWEEN $2 AND $3\nORDER BY date DESC\nLIMIT $4;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1320,
+        "y": 340,
+        "wires": [
+            [
+                "fa7df65394a057b6"
+            ]
+        ]
+    },
+    {
+        "id": "cb809e9ad3d54438",
+        "type": "switch",
+        "z": "3431837e7a804560",
+        "name": "",
+        "property": "useDate",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 920,
+        "y": 280,
+        "wires": [
+            [
+                "e3f77b90e936a758"
+            ],
+            [
+                "64b1c1e9382bd484"
+            ]
+        ]
+    },
+    {
+        "id": "9ec68bc51356325a",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/alert",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "82bdf4f05aea1564",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "9c38bcf13bbd5396"
+            ]
+        ]
+    },
+    {
+        "id": "d8d500742c73c7ae",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e00e5101f7fc5254",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Recuper les capteurs",
+        "query": "SELECT * FROM alerts ORDER BY date DESC LIMIT $1;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1280,
+        "y": 460,
+        "wires": [
+            [
+                "d8d500742c73c7ae"
+            ]
+        ]
+    },
+    {
+        "id": "dee184db49bdc8f7",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/alert/:lot",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "5f3e82a3ca37bf10",
+        "x": 150,
+        "y": 580,
+        "wires": [
+            [
+                "e7148d68e5c9cd85"
+            ]
+        ]
+    },
+    {
+        "id": "9ddc75101f33fd43",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "133cdb2049c166eb",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Recuper les capteurs",
+        "query": "SELECT * FROM alerts ORDER BY date DESC;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1280,
+        "y": 580,
+        "wires": [
+            [
+                "9ddc75101f33fd43"
+            ]
+        ]
+    },
+    {
+        "id": "ba2019b08cbab302",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les paramètres",
+        "func": "let lot = msg.req.params.lot;\n\nlet limit = parseInt(msg.req.query.limit || 10);\nif (isNaN(limit) || limit <= 0) limit = 10;\n\nlet from = msg.req.query.from;\nlet to = msg.req.query.to;\n\n// construire paramètres dynamiques\nmsg.params = [lot];\n\nmsg.useDate = false;\n\n// si date existe → on active filtre\nif (from && to) {\n    msg.useDate = true;\n    msg.params.push(from, to);\n}\n\n// toujours ajouter limit à la fin\nmsg.params.push(limit);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 580,
+        "wires": [
+            [
+                "4f8e1cd3550cb553"
+            ]
+        ]
+    },
+    {
+        "id": "8997335868d6cce8",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les paramètres",
+        "func": "let limit = parseInt(msg.req.query.limit || 10);\nif (isNaN(limit) || limit <= 0) limit = 10;\n\nlet from = msg.req.query.from;\nlet to = msg.req.query.to;\n\nmsg.params = [];\n\n// construire paramètres dynamiques\nmsg.useDate = false;\n\n// si date existe → on active filtre\nif (from && to) {\n    msg.useDate = true;\n    msg.params.push(from, to);\n}\n\n// toujours ajouter limit à la fin\nmsg.params.push(limit);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 460,
+        "wires": [
+            [
+                "acf320215474d040"
+            ]
+        ]
+    },
+    {
+        "id": "acf320215474d040",
+        "type": "switch",
+        "z": "3431837e7a804560",
+        "name": "",
+        "property": "useDate",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 920,
+        "y": 460,
+        "wires": [
+            [
+                "e00e5101f7fc5254"
+            ],
+            [
+                "957bc6ec0342ead8"
+            ]
+        ]
+    },
+    {
+        "id": "4f8e1cd3550cb553",
+        "type": "switch",
+        "z": "3431837e7a804560",
+        "name": "",
+        "property": "useDate",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 920,
+        "y": 580,
+        "wires": [
+            [
+                "133cdb2049c166eb"
+            ],
+            [
+                "4f5b0cd1df5463a5"
+            ]
+        ]
+    },
+    {
+        "id": "957bc6ec0342ead8",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les mesures par plage",
+        "query": "SELECT *\nFROM alerts\nWHERE date BETWEEN $1 AND $2\nORDER BY date DESC\nLIMIT $3;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1320,
+        "y": 520,
+        "wires": [
+            [
+                "d8d500742c73c7ae"
+            ]
+        ]
+    },
+    {
+        "id": "eaf406547c9894db",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/:lot",
+        "method": "patch",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "0d2747cbd37f45ec",
+        "x": 140,
+        "y": 720,
+        "wires": [
+            [
+                "01f226dd4fca03d2"
+            ]
+        ]
+    },
+    {
+        "id": "167e4c051c9ac36c",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "4f5b0cd1df5463a5",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les mesures par plage",
+        "query": "SELECT *\nFROM alerts\nWHERE nom = $1\nAND date BETWEEN $2 AND $3\nORDER BY date DESC\nLIMIT $4;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1320,
+        "y": 640,
+        "wires": [
+            [
+                "9ddc75101f33fd43"
+            ]
+        ]
+    },
+    {
+        "id": "e8775d9e78046f11",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les paramètres",
+        "func": "let lot = msg.req.params.lot;\nlet rawMax = msg.req.query.max;\nlet rawMin = msg.req.query.min;\nlet date_debut = msg.req.query.date_debut;\nlet duree_jours = msg.req.query.duree_jours;\n\n// Fonction utilitaire pour traiter la valeur\nfunction processValue(val) {\n    if (val === undefined || val === null || val === '') return null; // \"Ne rien faire\"\n    if (val === 'false') return 'false'; // \"Mettre à NULL\"\n    return parseFloat(val); // \"Mettre à jour avec une valeur\"\n}\n\nmsg.params = [lot, processValue(rawMax), processValue(rawMin),date_debut,duree_jours];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 720,
+        "wires": [
+            [
+                "b6448b8715e3c8cf"
+            ]
+        ]
+    },
+    {
+        "id": "b6448b8715e3c8cf",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les mesures par plage",
+        "query": "UPDATE public.lots \nSET \n    -- Gestion du max\n    max = CASE \n            WHEN $2::TEXT = 'false' THEN NULL \n            WHEN $2 IS NOT NULL THEN $2::DOUBLE PRECISION \n            ELSE max \n          END,\n    -- Gestion du min\n    min = CASE \n            WHEN $3::TEXT = 'false' THEN NULL \n            WHEN $3 IS NOT NULL THEN $3::DOUBLE PRECISION \n            ELSE min \n          END,\n    -- Gestion de la date_debut (si $4 est passé, on met à jour, sinon on garde la date actuelle)\n    date_debut = COALESCE($4::DATE, date_debut),\n    -- Gestion de la duree_jours (si $5 est passé, on met à jour, sinon on garde la valeur existante)\n    duree_jours = COALESCE($5::INTEGER, duree_jours)\nWHERE nom = $1::TEXT\nRETURNING *;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1000,
+        "y": 720,
+        "wires": [
+            [
+                "9f3ad1ade9dd633f"
+            ]
+        ]
+    },
+    {
+        "id": "13c843f2429ebd21",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/jwt",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "9e34503c940c0a0c",
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "151b290140ac2dd3"
+            ]
+        ]
+    },
+    {
+        "id": "151b290140ac2dd3",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Generation de tocken JWT",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\n// 1. Récupération de la durée envoyée par le client (en secondes)\n// Si non fourni, on utilise 3600 secondes (1 heure) par défaut\nconst dureeEnSecondes = msg.req.query.expiresIn || 3600;\n\n// 2. Vérification simplifiée (à adapter avec votre base de données)\nif (msg.payload.username === \"admin\" && msg.payload.password === \"password123\") {\n    \n    // 3. Génération du token avec la durée calculée\n    const token = jwt.sign(\n        { username: msg.payload.username }, \n        secretKey, \n        { expiresIn: parseInt(dureeEnSecondes) } // expiresIn accepte les nombres (secondes)\n    );\n    \n    msg.payload = { \n        status: \"success\", \n        token: token,\n        expiresIn: dureeEnSecondes\n    };\n    msg.statusCode = 200;\n} else {\n    msg.payload = { status: \"error\", msg: \"Identifiants invalides\" };\n    msg.statusCode = 401;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 120,
+        "wires": [
+            [
+                "62a4c32bea8bec93"
+            ]
+        ]
+    },
+    {
+        "id": "62a4c32bea8bec93",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "36a1be992c875243",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Auth Middleware",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\nconst authHeader = msg.req.headers['authorization'];\n\n// Vérifier si le header existe et suit le format \"Bearer <token>\"\nif (authHeader && authHeader.startsWith('Bearer ')) {\n    const token = authHeader.split(' ')[1];\n    try {\n        const decoded = jwt.verify(token, secretKey);\n        msg.user = decoded; // On stocke les infos utilisateur pour la suite\n        return msg; // Le token est valide, on continue\n    } catch (err) {\n        msg.res.status(403).send({\n            status: \"error\",\n            msg: \"Token invalide ou expiré\"\n        });\n    }\n} else {\n    msg.res.status(401).send({\n        status: \"error\",\n        msg: \"Accès non autorisé : Token manquant\"\n    });\n    return null; // On bloque la requête\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 280,
+        "wires": [
+            [
+                "7b04baa8aa7a7aad"
+            ]
+        ]
+    },
+    {
+        "id": "9c38bcf13bbd5396",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Auth Middleware",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\nconst authHeader = msg.req.headers['authorization'];\n\n// Vérifier si le header existe et suit le format \"Bearer <token>\"\nif (authHeader && authHeader.startsWith('Bearer ')) {\n    const token = authHeader.split(' ')[1];\n    try {\n        const decoded = jwt.verify(token, secretKey);\n        msg.user = decoded; // On stocke les infos utilisateur pour la suite\n        return msg; // Le token est valide, on continue\n    } catch (err) {\n        msg.res.status(403).send({\n            status: \"error\",\n            msg: \"Token invalide ou expiré\"\n        });\n    }\n} else {\n    msg.res.status(401).send({\n        status: \"error\",\n        msg: \"Accès non autorisé : Token manquant\"\n    });\n    return null; // On bloque la requête\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 460,
+        "wires": [
+            [
+                "8997335868d6cce8"
+            ]
+        ]
+    },
+    {
+        "id": "e7148d68e5c9cd85",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Auth Middleware",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\nconst authHeader = msg.req.headers['authorization'];\n\n// Vérifier si le header existe et suit le format \"Bearer <token>\"\nif (authHeader && authHeader.startsWith('Bearer ')) {\n    const token = authHeader.split(' ')[1];\n    try {\n        const decoded = jwt.verify(token, secretKey);\n        msg.user = decoded; // On stocke les infos utilisateur pour la suite\n        return msg; // Le token est valide, on continue\n    } catch (err) {\n        msg.res.status(403).send({\n            status: \"error\",\n            msg: \"Token invalide ou expiré\"\n        });\n    }\n} else {\n    msg.res.status(401).send({\n        status: \"error\",\n        msg: \"Accès non autorisé : Token manquant\"\n    });\n    return null; // On bloque la requête\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 580,
+        "wires": [
+            [
+                "ba2019b08cbab302"
+            ]
+        ]
+    },
+    {
+        "id": "01f226dd4fca03d2",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Auth Middleware",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\nconst authHeader = msg.req.headers['authorization'];\n\n// Vérifier si le header existe et suit le format \"Bearer <token>\"\nif (authHeader && authHeader.startsWith('Bearer ')) {\n    const token = authHeader.split(' ')[1];\n    try {\n        const decoded = jwt.verify(token, secretKey);\n        msg.user = decoded; // On stocke les infos utilisateur pour la suite\n        return msg; // Le token est valide, on continue\n    } catch (err) {\n        msg.res.status(403).send({\n            status: \"error\",\n            msg: \"Token invalide ou expiré\"\n        });\n    }\n} else {\n    msg.res.status(401).send({\n        status: \"error\",\n        msg: \"Accès non autorisé : Token manquant\"\n    });\n    return null; // On bloque la requête\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 720,
+        "wires": [
+            [
+                "e8775d9e78046f11"
+            ]
+        ]
+    },
+    {
+        "id": "2a1fb62e4b271127",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Auth Middleware",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\nconst authHeader = msg.req.headers['authorization'];\n\n// Vérifier si le header existe et suit le format \"Bearer <token>\"\nif (authHeader && authHeader.startsWith('Bearer ')) {\n    const token = authHeader.split(' ')[1];\n    try {\n        const decoded = jwt.verify(token, secretKey);\n        msg.user = decoded; // On stocke les infos utilisateur pour la suite\n        return msg; // Le token est valide, on continue\n    } catch (err) {\n        msg.res.status(403).send({\n            status: \"error\",\n            msg: \"Token invalide ou expiré\"\n        });\n    }\n} else {\n    msg.res.status(401).send({\n        status: \"error\",\n        msg: \"Accès non autorisé : Token manquant\"\n    });\n    return null; // On bloque la requête\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 200,
+        "wires": [
+            [
+                "8da0c50521b644f5"
+            ]
+        ]
+    },
+    {
+        "id": "9f3ad1ade9dd633f",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "reponce",
+        "func": "// Le résultat de la mise à jour est maintenant dans msg.payload[0] (selon le driver utilisé)\nlet data = msg.payload[0] || msg.payload;\n\n// Construire le message de réponse avec les données réelles de la base\nmsg.payload = {\n    \"status\": \"success\",\n    \"lot\": data.nom,\n    \"max\": data.max,\n    \"min\": data.min,\n    \"date_debut\": data.date_debut,\n    \"duree_jours\": data.duree_jours\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 720,
+        "wires": [
+            [
+                "167e4c051c9ac36c"
+            ]
+        ]
+    }
+]
