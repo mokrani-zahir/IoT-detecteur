@@ -18,13 +18,21 @@ services:
     container_name: node-red
     restart: unless-stopped
     environment:
+    - POSTGRES_HOST=${POSTGRES_HOST}
+    - POSTGRES_PORT=${POSTGRES_PORT}
+    - POSTGRES_DB=${POSTGRES_DB}
+    - POSTGRES_USER=${POSTGRES_USER}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     - JWT_SECRET=${JWT_SECRET}
+    - NODE_RED_ENABLE_SAFE_MODE=false
+    - TZ=${TZ:-Europe/Paris}
     ports:
       - "1880:1880"
     volumes:
       - ./node_red_data:/data
     depends_on:
       - mqtt
+      - db
 
   swagger-ui:
       image: swaggerapi/swagger-ui
@@ -34,6 +42,8 @@ services:
       environment:
         # On pointe ici vers l'URL de votre JSON Node-RED
         URL: "http://localhost:1880/http-api/swagger.json"
+      depends_on:
+        - nodered
 
   db:
     image: postgres:16
