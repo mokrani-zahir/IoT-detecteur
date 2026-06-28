@@ -60,3 +60,8 @@ ALTER TABLE ONLY public.mesures
 
 ALTER TABLE ONLY public.alerts
     ADD CONSTRAINT alerts_nom_fkey FOREIGN KEY (nom) REFERENCES public.lots(nom);
+
+-- Insertion des données pour les lots
+INSERT INTO public.lots (nom, type, max, min, description, date_debut, duree_jours) VALUES
+('dht22-h1', 'humidite', 29.0, NULL, 'Capteur de humidité de la zone 1', '2026-06-20', 365),
+('dht22-t1', 'temperature', 300.0, NULL, 'Capteur de temerature de la zone 1', '2026-06-24', 365);
