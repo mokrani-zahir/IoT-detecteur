@@ -19,7 +19,7 @@ CREATE TABLE public.mesures (
     id integer NOT NULL,
     nom character varying(25),
     valeur double precision,
-    date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    date timestamp DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT mesures_pkey PRIMARY KEY (id)
 );
 
@@ -38,7 +38,7 @@ CREATE TABLE public.alerts (
     id integer NOT NULL,
     nom character varying(25),
     valeur double precision,
-    date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    date timestamp DEFAULT CURRENT_TIMESTAMP,
     is_checked boolean DEFAULT false,
     CONSTRAINT alerts_pkey PRIMARY KEY (id)
 );
