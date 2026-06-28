@@ -28,6 +28,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - NODE_RED_ENABLE_SAFE_MODE=false
       - TZ=${TZ:-Europe/Paris}
+      - API_USERNAME=${API_USERNAME}
+      - API_PASSWORD=${API_PASSWORD}
     ports:
       - "1880:1880"
     volumes:
