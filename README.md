@@ -17,7 +17,7 @@ Système de monitoring et contrôle d'humidité et tempirateur avec Node-RED, Po
 
 ```bash
 # 1. Cloner le repository
-git clone https://github.com/votre-username/humidateur.git
+git clone https://github.com/mokrani-zahir/IoT-detecteur.git
 cd humidateur
 ```
 
