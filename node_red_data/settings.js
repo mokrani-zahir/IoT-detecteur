@@ -573,7 +573,9 @@ module.exports = {
         },
 
         jwt: require('jsonwebtoken'),
-        jwtSecret: process.env.JWT_SECRET
+        jwtSecret: process.env.JWT_SECRET,
+        apiUser: process.env.API_USERNAME,
+        apiPass: process.env.API_PASSWORD,
     },
 
     /** The maximum number of messages nodes will buffer internally as part of their
