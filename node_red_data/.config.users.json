@@ -18,7 +18,7 @@
                     "v": 4,
                     "tabs": [],
                     "primary": {
-                        "width": 300,
+                        "width": 535,
                         "top": {
                             "tabs": [
                                 "info",
@@ -27,7 +27,7 @@
                                 "context",
                                 "swagger-ui"
                             ],
-                            "height": 280.187,
+                            "height": 282.172,
                             "hidden": false,
                             "active": "config"
                         },
@@ -45,7 +45,7 @@
                             "tabs": [
                                 "explorer"
                             ],
-                            "height": 292.77500000000003,
+                            "height": 294.766,
                             "hidden": false,
                             "active": "explorer"
                         },

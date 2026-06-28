@@ -444,7 +444,7 @@
         "type": "postgresql",
         "z": "e4aa9b15e1aa2193",
         "name": "",
-        "query": "SELECT \n    $1::TEXT AS nom, \n    $2::DOUBLE PRECISION AS valeu,\n    CASE \n        WHEN ($2::DOUBLE PRECISION) > max OR ($2::DOUBLE PRECISION) < min THEN true \n        ELSE false \n    END AS alerte\nFROM public.lots \nWHERE nom = $1::TEXT;",
+        "query": "SELECT \n    $1::TEXT AS nom, \n    $2::DOUBLE PRECISION AS valeu,\n    CASE \n        WHEN ($2::DOUBLE PRECISION) > max OR ($2::DOUBLE PRECISION) < min THEN true \n        ELSE false \n    END AS alerts\nFROM public.lots \nWHERE nom = $1::TEXT;",
         "postgreSQLConfig": "91e595620c23b1e6",
         "split": false,
         "rowsPerMsg": 1,
