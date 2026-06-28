@@ -553,6 +553,25 @@ module.exports = {
      */
     functionGlobalContext: {
         // os:require('os'),
+
+        postgresConfig: {
+            host: process.env.POSTGRES_HOST,
+            port: parseInt(process.env.POSTGRES_PORT),
+            database: process.env.POSTGRES_DB,
+            user: process.env.POSTGRES_USER,
+            password: process.env.POSTGRES_PASSWORD,
+            ssl: process.env.POSTGRES_SSL === 'true' ? {
+                rejectUnauthorized: false
+            } : false
+        },
+        
+        // MQTT - se connecte via l'hôte
+        mqttConfig: {
+            host: process.env.MQTT_HOST,
+            port: parseInt(process.env.MQTT_PORT) || 1883,
+            ws_port: parseInt(process.env.MQTT_WS_PORT) || 9001
+        },
+
         jwt: require('jsonwebtoken'),
         jwtSecret: process.env.JWT_SECRET
     },
