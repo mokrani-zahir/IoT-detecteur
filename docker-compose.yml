@@ -39,15 +39,14 @@ services:
       - db
 
   swagger-ui:
-      image: swaggerapi/swagger-ui
-      container_name: swagger-ui
-      ports:
-        - "8080:8080"
-      environment:
-        # On pointe ici vers l'URL de votre JSON Node-RED
-        URL: "http://localhost:1880/http-api/swagger.json"
-      depends_on:
-        - nodered
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./swagger.json:/usr/share/nginx/html/swagger.json
+    environment:
+      URL: "./swagger.json"
 
   db:
     image: postgres:16
