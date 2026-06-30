@@ -245,6 +245,32 @@
                 ],
                 "requestBody": {},
                 "responses": {}
+            },
+            "patch": {
+                "summary": "Changer status alert",
+                "description": "Marquer une alerte comme vérifiée par un administrateur.",
+                "tags": [
+                    "Alert"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "lot",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Donner le nom du capteur"
+                    }
+                ],
+                "requestBody": {},
+                "responses": {}
             }
         },
         "/api/v1/{lot}": {
