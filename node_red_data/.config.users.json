@@ -18,7 +18,7 @@
                     "v": 4,
                     "tabs": [],
                     "primary": {
-                        "width": 0,
+                        "width": 300,
                         "top": {
                             "tabs": [
                                 "info",
@@ -28,8 +28,8 @@
                                 "swagger-ui"
                             ],
                             "height": 285.363,
-                            "hidden": true,
-                            "active": "config"
+                            "hidden": false,
+                            "active": "help"
                         },
                         "bottom": {
                             "tabs": [
@@ -45,15 +45,15 @@
                             "tabs": [
                                 "explorer"
                             ],
-                            "height": 297.96200000000005,
-                            "hidden": true,
+                            "height": 299.55,
+                            "hidden": false,
                             "active": "explorer"
                         },
                         "bottom": {
                             "tabs": [
                                 "palette"
                             ],
-                            "hidden": true,
+                            "hidden": false,
                             "active": "palette"
                         }
                     }
@@ -67,7 +67,7 @@
             "filter": "filterAll",
             "clearType": "all"
         },
-        "menu-menu-item-right-sidebar": false,
-        "menu-menu-item-left-sidebar": false
+        "menu-menu-item-right-sidebar": true,
+        "menu-menu-item-left-sidebar": true
     }
 }

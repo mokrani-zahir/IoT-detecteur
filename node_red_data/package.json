@@ -6,6 +6,7 @@
     "dependencies": {
         "@digital-tvilling/node-red-openapi-generator": "~1.1.1",
         "@node-red-tools/node-red-contrib-openapi": "~0.4.0",
-        "node-red-contrib-postgresql": "~0.15.4"
+        "node-red-contrib-postgresql": "~0.15.4",
+        "node-red-node-email": "~5.2.4"
     }
 }
