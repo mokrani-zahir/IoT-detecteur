@@ -43,14 +43,29 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "msg": {
+                                        "nom": {
                                             "type": "string",
-                                            "name": "msg",
+                                            "name": "nom",
                                             "propertyRow": true
                                         },
-                                        "lot": {
+                                        "type": {
                                             "type": "string",
-                                            "name": "lot",
+                                            "name": "type",
+                                            "propertyRow": true
+                                        },
+                                        "max": {
+                                            "type": "string",
+                                            "name": "max",
+                                            "propertyRow": true
+                                        },
+                                        "min": {
+                                            "type": "string",
+                                            "name": "min",
+                                            "propertyRow": true
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "name": "description",
                                             "propertyRow": true
                                         }
                                     }
@@ -130,12 +145,6 @@
                                             "type": "number"
                                         },
                                         "date": {
-                                            "type": "string"
-                                        },
-                                        "date_debut": {
-                                            "type": "string"
-                                        },
-                                        "duree_jours": {
                                             "type": "string"
                                         }
                                     }
@@ -244,7 +253,34 @@
                     }
                 ],
                 "requestBody": {},
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "No description",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "number"
+                                        },
+                                        "nom": {
+                                            "type": "string"
+                                        },
+                                        "valeur": {
+                                            "type": "number"
+                                        },
+                                        "date": {
+                                            "type": "string"
+                                        },
+                                        "is_checked": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
             "patch": {
                 "summary": "Changer status alert",
@@ -270,7 +306,25 @@
                     }
                 ],
                 "requestBody": {},
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "No description",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "nom": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/v1/{lot}": {
@@ -334,7 +388,31 @@
                     }
                 ],
                 "requestBody": {},
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "No description",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "capteur": {
+                                            "type": "string"
+                                        },
+                                        "max": {
+                                            "type": "number"
+                                        },
+                                        "min": {
+                                            "type": "min"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/v1/jwt": {
