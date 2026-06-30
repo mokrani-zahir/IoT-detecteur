@@ -576,6 +576,7 @@ module.exports = {
         jwtSecret: process.env.JWT_SECRET,
         apiUser: process.env.API_USERNAME,
         apiPass: process.env.API_PASSWORD,
+        zone: process.env.ZONE,
 
         endpointCenter: process.env.ENDPOINT_CENTER,
         endpointToken: process.env.ENDPOINT_TOKEN,

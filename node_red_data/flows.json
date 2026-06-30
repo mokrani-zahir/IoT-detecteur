@@ -701,7 +701,7 @@
         "type": "function",
         "z": "e4aa9b15e1aa2193",
         "name": "Prépare Email",
-        "func": "// 1. Récupération des variables de configuration\nlet host = global.get(\"smtpHost\");\nlet port = global.get(\"smtpPort\");\nlet user = global.get(\"smtpUser\");\nlet pass = global.get(\"smtpPassword\");\nlet secure = global.get(\"smtpSecure\");\n\nmsg.email = {\n    host: host,\n    port: parseInt(port),\n    user: user,\n    pass: pass,\n    secure: secure // Toujours false pour MailHog\n};\n\nmsg.from = global.get(\"emailSender\");\n\n// On définit le sujet de l'email\nmsg.topic = \"ALERTE : capteur \" + msg.topic;\n\n// On définit le corps du message\nmsg.payload = \"Attention, le capteur \" + msg.topic + \n    \" a signalé une valeur critique de \"+ msg.value +\". Veuillez vérifier le système.\";\n\n\nreturn msg;",
+        "func": "// 1. Récupération des variables de configuration\nlet host = global.get(\"smtpHost\");\nlet port = global.get(\"smtpPort\");\nlet user = global.get(\"smtpUser\");\nlet pass = global.get(\"smtpPassword\");\nlet secure = global.get(\"smtpSecure\");\nlet zone = global.get(\"zone\");\n\nmsg.email = {\n    host: host,\n    port: parseInt(port),\n    user: user,\n    pass: pass,\n    secure: secure // Toujours false pour MailHog\n};\n\nmsg.from = global.get(\"emailSender\");\n\n// On définit le sujet de l'email\nmsg.topic = \"Alerte critique - Capteur \" + msg.topic + \" (Zone : \" + zone+ \")\";\n\n// On définit le corps du message\nmsg.payload = `Bonjour,\n\nUne alerte critique a été détectée par le système de supervision.\n\nDétails de l'alerte :\n• Zone : ${zone}\n• Capteur : ${msg.topic}\n• Valeur mesurée : ${msg.value}\n\nCette valeur dépasse le seuil de sécurité configuré.\n\nNous vous recommandons de vérifier cet équipement dès que possible afin d'éviter toute interruption de service ou tout incident.\n\n--\nMessage généré automatiquement par le système de supervision.\nMerci de ne pas répondre à cet e-mail.`;\n\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1355,8 +1355,7 @@
         "y": 720,
         "wires": [
             [
-                "2d81d243e45fbda1",
-                "614de04bfa9c96c1"
+                "2d81d243e45fbda1"
             ]
         ]
     },
@@ -1450,27 +1449,11 @@
         "wires": []
     },
     {
-        "id": "614de04bfa9c96c1",
-        "type": "debug",
-        "z": "3431837e7a804560",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 400,
-        "y": 660,
-        "wires": []
-    },
-    {
         "id": "49afed860114b8d7",
         "type": "function",
         "z": "5d73874c786412e2",
         "name": "Convert mqtt to socket",
-        "func": "// Transformer le message MQTT en objet JSON propre\nlet data = {\n    topic: msg.topic,\n    payload: JSON.parse(msg.payload.toString()),\n    timestamp: Date.now()\n};\n\n// On s'assure que le message est bien envoyé au websocket\nmsg.payload = data; \nreturn msg;",
+        "func": "// Transformer le message MQTT en objet JSON propre\nlet zone = global.get(\"zone\");\n\nlet data = {\n    zone: zone,\n    topic: msg.topic,\n    payload: JSON.parse(msg.payload.toString()),\n    timestamp: Date.now()\n};\n\n// On s'assure que le message est bien envoyé au websocket\nmsg.payload = data; \nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
