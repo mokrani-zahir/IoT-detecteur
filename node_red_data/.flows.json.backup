@@ -18,7 +18,7 @@
     {
         "id": "5d73874c786412e2",
         "type": "tab",
-        "label": "API REST MQTT",
+        "label": "MQTT to WebSocket",
         "disabled": false,
         "info": "",
         "env": []
@@ -397,6 +397,37 @@
         "deprecated": false
     },
     {
+        "id": "9517da29236907da",
+        "type": "websocket-listener",
+        "path": "/ws/",
+        "wholemsg": "false"
+    },
+    {
+        "id": "c130d2dbaa2ecce2",
+        "type": "swagger-doc",
+        "summary": "Récupérer les alerts d'un capteur",
+        "description": "Cet endpoint permet de récupérer tous alerts enregistrés dans le système.",
+        "tags": "Alert",
+        "parameters": [
+            {
+                "name": "authorization",
+                "in": "header",
+                "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "lot",
+                "in": "query",
+                "description": "Donner le nom du capteur",
+                "required": true,
+                "type": "string"
+            }
+        ],
+        "responses": {},
+        "deprecated": false
+    },
+    {
         "id": "44dafb8a2a37a7f4",
         "type": "mqtt in",
         "z": "e4aa9b15e1aa2193",
@@ -477,7 +508,7 @@
         "type": "switch",
         "z": "e4aa9b15e1aa2193",
         "name": "",
-        "property": "payload[0].alerte",
+        "property": "payload[0].alerts",
         "propertyType": "msg",
         "rules": [
             {
@@ -500,7 +531,7 @@
         "type": "function",
         "z": "e4aa9b15e1aa2193",
         "name": "save alert",
-        "func": "if (msg.payload && msg.payload.length > 0) {\n    let data = msg.payload[0]; // On récupère l'objet dans le tableau\n    \n    // Vous pouvez maintenant manipuler vos variables\n    let nomCapteur = data.nom;\n    let valeurRecue = data.valeu; // Attention, vérifiez si c'est 'valeu' ou 'valeur' dans votre base\n    let estEnAlerte = data.alerte; // Ceci sera true ou false\n    \n    // Exemple : Créer un message spécifique pour une alerte\n    if (estEnAlerte === true) {\n        msg.params = [nomCapteur, parseFloat(valeurRecue)];\n        return msg;\n    }\n}\n\nreturn null;",
+        "func": "if (msg.payload && msg.payload.length > 0) {\n    let data = msg.payload[0]; // On récupère l'objet dans le tableau\n    \n    // Vous pouvez maintenant manipuler vos variables\n    let nomCapteur = data.nom;\n    let valeurRecue = data.valeu; // Attention, vérifiez si c'est 'valeu' ou 'valeur' dans votre base\n    let estEnAlerte = data.alerts; // Ceci sera true ou false\n    \n    // Exemple : Créer un message spécifique pour une alerte\n    if (estEnAlerte === true) {\n        msg.params = [nomCapteur, parseFloat(valeurRecue)];\n        return msg;\n    }\n}\n\nreturn null;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -511,9 +542,9 @@
         "y": 540,
         "wires": [
             [
-                "18911ef572c45b75",
                 "bdc5f0c8a507e084",
-                "b2c663ad3604acf5"
+                "b2c663ad3604acf5",
+                "18911ef572c45b75"
             ]
         ]
     },
@@ -527,30 +558,8 @@
         "split": false,
         "rowsPerMsg": "1",
         "outputs": 1,
-        "x": 1620,
+        "x": 2180,
         "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "8821985bc244e405",
-        "type": "http request",
-        "z": "e4aa9b15e1aa2193",
-        "name": "",
-        "method": "POST",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "${ENDPOINT_CENTER}",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 1610,
-        "y": 600,
         "wires": [
             []
         ]
@@ -584,25 +593,23 @@
         "x": 1400,
         "y": 600,
         "wires": [
-            [
-                "8821985bc244e405"
-            ]
+            []
         ]
     },
     {
         "id": "a50a3114bc380864",
         "type": "e-mail",
         "z": "e4aa9b15e1aa2193",
-        "server": "${SMPT_HOST}",
-        "port": "${SMPT_HOST}",
+        "server": "${SMTP_HOST}",
+        "port": "${SMTP_PORT}",
         "authtype": "NONE",
         "saslformat": true,
         "token": "oauth2Response.access_token",
         "secure": false,
-        "tls": false,
+        "tls": true,
         "name": "${EMAIL_SENDER}",
         "dname": "Envoi email d'alert",
-        "x": 1590,
+        "x": 2150,
         "y": 480,
         "wires": []
     },
@@ -610,8 +617,8 @@
         "id": "b2c663ad3604acf5",
         "type": "function",
         "z": "e4aa9b15e1aa2193",
-        "name": "Préparer Email",
-        "func": "// On récupère les données de votre alerte originale\nlet data = msg.payload[0];\n// 1. Récupération des variables de configuration\nlet host = global.get(\"smtpHost\");\nlet port = global.get(\"smtpPort\");\nlet user = global.get(\"smtpUser\");\nlet pass = global.get(\"smtpPassword\");\nlet secure = global.get(\"smtpSecure\");\n\nmsg.email = {\n    host: host,\n    port: parseInt(port),\n    user: user,\n    pass: pass,\n    secure: secure // Toujours false pour MailHog\n};\n\nmsg.from = global.get(\"emailSender\");\n\n// On définit le sujet de l'email\nmsg.topic = \"ALERTE : lot \" + data.nom;\n\n// On définit le corps du message\nmsg.payload = \"Attention, le lot \" + data.nom + \n    \" a signalé une valeur critique de \" + data.valeu + \n    \". Veuillez vérifier le système.\";\n\nreturn msg;",
+        "name": "Recuper parm",
+        "func": "// On récupère les données de votre alerte originale\nlet data = msg.payload[0];\n\nmsg.params = [data.nom]\nmsg.value = data.valeu\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -619,6 +626,89 @@
         "finalize": "",
         "libs": [],
         "x": 1380,
+        "y": 480,
+        "wires": [
+            [
+                "b8a0cab6cc6496fa"
+            ]
+        ]
+    },
+    {
+        "id": "8821985bc244e405",
+        "type": "http request",
+        "z": "e4aa9b15e1aa2193",
+        "name": "Envoyer alert au serveur central",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "${ENDPOINT_CENTER}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 2110,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b8a0cab6cc6496fa",
+        "type": "postgresql",
+        "z": "e4aa9b15e1aa2193",
+        "name": "Alert",
+        "query": "SELECT * FROM alerts WHERE is_checked=false AND nom=$1 ORDER BY date DESC LIMIT 1;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 1570,
+        "y": 480,
+        "wires": [
+            [
+                "08251b055e0391e3"
+            ]
+        ]
+    },
+    {
+        "id": "08251b055e0391e3",
+        "type": "switch",
+        "z": "e4aa9b15e1aa2193",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1740,
+        "y": 480,
+        "wires": [
+            [
+                "9db83b870400af99"
+            ]
+        ]
+    },
+    {
+        "id": "9db83b870400af99",
+        "type": "function",
+        "z": "e4aa9b15e1aa2193",
+        "name": "Prépare Email",
+        "func": "// 1. Récupération des variables de configuration\nlet host = global.get(\"smtpHost\");\nlet port = global.get(\"smtpPort\");\nlet user = global.get(\"smtpUser\");\nlet pass = global.get(\"smtpPassword\");\nlet secure = global.get(\"smtpSecure\");\n\nmsg.email = {\n    host: host,\n    port: parseInt(port),\n    user: user,\n    pass: pass,\n    secure: secure // Toujours false pour MailHog\n};\n\nmsg.from = global.get(\"emailSender\");\n\n// On définit le sujet de l'email\nmsg.topic = \"ALERTE : capteur \" + msg.topic;\n\n// On définit le corps du message\nmsg.payload = \"Attention, le capteur \" + msg.topic + \n    \" a signalé une valeur critique. Veuillez vérifier le système.\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1940,
         "y": 480,
         "wires": [
             [
@@ -1008,7 +1098,7 @@
         "skipBodyParsing": false,
         "swaggerDoc": "0d2747cbd37f45ec",
         "x": 140,
-        "y": 720,
+        "y": 800,
         "wires": [
             [
                 "01f226dd4fca03d2"
@@ -1023,7 +1113,7 @@
         "statusCode": "",
         "headers": {},
         "x": 1550,
-        "y": 720,
+        "y": 800,
         "wires": []
     },
     {
@@ -1057,7 +1147,7 @@
         "finalize": "",
         "libs": [],
         "x": 690,
-        "y": 720,
+        "y": 800,
         "wires": [
             [
                 "b6448b8715e3c8cf"
@@ -1075,7 +1165,7 @@
         "rowsPerMsg": "1",
         "outputs": 1,
         "x": 1000,
-        "y": 720,
+        "y": 800,
         "wires": [
             [
                 "9f3ad1ade9dd633f"
@@ -1204,7 +1294,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 720,
+        "y": 800,
         "wires": [
             [
                 "e8775d9e78046f11"
@@ -1244,7 +1334,7 @@
         "finalize": "",
         "libs": [],
         "x": 1240,
-        "y": 720,
+        "y": 800,
         "wires": [
             [
                 "167e4c051c9ac36c"
@@ -1252,15 +1342,191 @@
         ]
     },
     {
+        "id": "96b0d3289b352435",
+        "type": "http in",
+        "z": "3431837e7a804560",
+        "name": "",
+        "url": "/api/v1/alert/:lot",
+        "method": "patch",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "c130d2dbaa2ecce2",
+        "x": 160,
+        "y": 720,
+        "wires": [
+            [
+                "2d81d243e45fbda1",
+                "614de04bfa9c96c1"
+            ]
+        ]
+    },
+    {
+        "id": "9452fbda6680b3af",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les paramètres",
+        "func": "let lot = msg.req.params.lot;\n\n// construire paramètres dynamiques\nmsg.params = [lot];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 720,
+        "wires": [
+            [
+                "d6d37124fbcb7939"
+            ]
+        ]
+    },
+    {
+        "id": "2d81d243e45fbda1",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "Auth Middleware",
+        "func": "const jwt = global.get('jwt');\nconst secretKey = global.get('jwtSecret');\n\nconst authHeader = msg.req.headers['authorization'];\n\n// Vérifier si le header existe et suit le format \"Bearer <token>\"\nif (authHeader && authHeader.startsWith('Bearer ')) {\n    const token = authHeader.split(' ')[1];\n    try {\n        const decoded = jwt.verify(token, secretKey);\n        msg.user = decoded; // On stocke les infos utilisateur pour la suite\n        return msg; // Le token est valide, on continue\n    } catch (err) {\n        msg.res.status(403).send({\n            status: \"error\",\n            msg: \"Token invalide ou expiré\"\n        });\n    }\n} else {\n    msg.res.status(401).send({\n        status: \"error\",\n        msg: \"Accès non autorisé : Token manquant\"\n    });\n    return null; // On bloque la requête\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 720,
+        "wires": [
+            [
+                "9452fbda6680b3af"
+            ]
+        ]
+    },
+    {
+        "id": "d6d37124fbcb7939",
+        "type": "postgresql",
+        "z": "3431837e7a804560",
+        "name": "Récupérer les mesures par plage",
+        "query": "UPDATE public.alerts SET is_checked=true WHERE nom = $1::TEXT RETURNING *;",
+        "postgreSQLConfig": "91e595620c23b1e6",
+        "split": false,
+        "rowsPerMsg": "1",
+        "outputs": 1,
+        "x": 1000,
+        "y": 720,
+        "wires": [
+            [
+                "8689c29cba45d756"
+            ]
+        ]
+    },
+    {
+        "id": "8689c29cba45d756",
+        "type": "function",
+        "z": "3431837e7a804560",
+        "name": "reponce",
+        "func": "// Le résultat de la mise à jour est maintenant dans msg.payload[0] (selon le driver utilisé)\nlet data = msg.payload[0] || msg.payload;\n\n// Construire le message de réponse avec les données réelles de la base\nmsg.payload = {\n    \"status\": \"success\",\n    \"capteur\": data.nom,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 720,
+        "wires": [
+            [
+                "09ead6c740c07751"
+            ]
+        ]
+    },
+    {
+        "id": "09ead6c740c07751",
+        "type": "http response",
+        "z": "3431837e7a804560",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1550,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "614de04bfa9c96c1",
+        "type": "debug",
+        "z": "3431837e7a804560",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "49afed860114b8d7",
+        "type": "function",
+        "z": "5d73874c786412e2",
+        "name": "Convert mqtt to socket",
+        "func": "// Transformer le message MQTT en objet JSON propre\nlet data = {\n    topic: msg.topic,\n    payload: JSON.parse(msg.payload.toString()),\n    timestamp: Date.now()\n};\n\n// On s'assure que le message est bien envoyé au websocket\nmsg.payload = data; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 300,
+        "wires": [
+            [
+                "475465ed6bdf7d01"
+            ]
+        ]
+    },
+    {
+        "id": "8f111435cfb37c72",
+        "type": "mqtt in",
+        "z": "5d73874c786412e2",
+        "name": "MQTT",
+        "topic": "#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "a060db820917f3fe",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "49afed860114b8d7"
+            ]
+        ]
+    },
+    {
+        "id": "475465ed6bdf7d01",
+        "type": "websocket out",
+        "z": "5d73874c786412e2",
+        "name": "",
+        "server": "9517da29236907da",
+        "client": "",
+        "x": 580,
+        "y": 300,
+        "wires": []
+    },
+    {
         "id": "443eeae254a1c29d",
         "type": "e-mail",
         "z": "3df317a692ac4ac1",
         "server": "${SMTP_HOST}",
         "port": "${SMTP_PORT}",
-        "authtype": "BASIC",
+        "authtype": "NONE",
         "saslformat": true,
         "token": "oauth2Response.access_token",
-        "secure": true,
+        "secure": false,
         "tls": true,
         "name": "${EMAIL_SENDER}",
         "dname": "send email",
