@@ -263,6 +263,13 @@
                 "description": "Nécessite un jeton JWT valide dans l'en-tête Authorization. Format : Bearer <token>.",
                 "required": true,
                 "type": "string"
+            },
+            {
+                "name": "lot",
+                "in": "query",
+                "description": "Donner le nom du capteur",
+                "required": true,
+                "type": "string"
             }
         ],
         "responses": {},
