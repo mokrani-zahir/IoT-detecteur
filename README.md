@@ -7,6 +7,7 @@ Système de monitoring et contrôle d'humidité et tempirateur avec Node-RED, Po
 - **Node-RED** : Interface de workflow et dashboard (port 1880)
 - **PostgreSQL** : Base de données persistante (port 5432)
 - **Mosquitto** : Broker MQTT pour communication IoT (port 1883)
+- **Node.js** : Vous avez deux option excute command npm install niveau de system au niveau de container node-red
 
 ## Prérequis
 
@@ -18,7 +19,8 @@ Système de monitoring et contrôle d'humidité et tempirateur avec Node-RED, Po
 ```bash
 # 1. Cloner le repository
 git clone https://github.com/mokrani-zahir/IoT-detecteur.git
-cd humidateur
+cd IoT-detecteur/node_red_data
+npm install
 ```
 
 ## Renommer le fichier :
