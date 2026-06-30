@@ -576,6 +576,16 @@ module.exports = {
         jwtSecret: process.env.JWT_SECRET,
         apiUser: process.env.API_USERNAME,
         apiPass: process.env.API_PASSWORD,
+
+        endpointCenter: process.env.ENDPOINT_CENTER,
+        endpointToken: process.env.ENDPOINT_TOKEN,
+
+        emailSender: process.env.EMAIL_SENDER,
+        smtpHost: process.env.SMTP_HOST,
+        smtpPort: process.env.SMTP_PORT,
+        smtpUser: process.env.SMTP_USER,
+        smtpPassword: process.env.SMTP_PASSWORD,
+        smtpSecure:process.env.SMTP_SECURE || false,
     },
 
     /** The maximum number of messages nodes will buffer internally as part of their

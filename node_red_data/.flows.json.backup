@@ -24,6 +24,14 @@
         "env": []
     },
     {
+        "id": "3df317a692ac4ac1",
+        "type": "tab",
+        "label": "Email send test",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "a060db820917f3fe",
         "type": "mqtt-broker",
         "name": "Serveur MQTT",
@@ -503,7 +511,9 @@
         "y": 540,
         "wires": [
             [
-                "18911ef572c45b75"
+                "18911ef572c45b75",
+                "bdc5f0c8a507e084",
+                "b2c663ad3604acf5"
             ]
         ]
     },
@@ -517,10 +527,103 @@
         "split": false,
         "rowsPerMsg": "1",
         "outputs": 1,
-        "x": 1320,
+        "x": 1620,
         "y": 540,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "8821985bc244e405",
+        "type": "http request",
+        "z": "e4aa9b15e1aa2193",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "${ENDPOINT_CENTER}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1610,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bdc5f0c8a507e084",
+        "type": "change",
+        "z": "e4aa9b15e1aa2193",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{ \"lot\": payload[0].nom, \"value\": payload[0].valeu, \"status\": \"alert\" }",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{\"Content-Type\":\"application/json\",\"Authorization\":\"${ENDPOINT_TOKEN}\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1400,
+        "y": 600,
+        "wires": [
+            [
+                "8821985bc244e405"
+            ]
+        ]
+    },
+    {
+        "id": "a50a3114bc380864",
+        "type": "e-mail",
+        "z": "e4aa9b15e1aa2193",
+        "server": "${SMPT_HOST}",
+        "port": "${SMPT_HOST}",
+        "authtype": "NONE",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": false,
+        "tls": false,
+        "name": "${EMAIL_SENDER}",
+        "dname": "Envoi email d'alert",
+        "x": 1590,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "b2c663ad3604acf5",
+        "type": "function",
+        "z": "e4aa9b15e1aa2193",
+        "name": "Préparer Email",
+        "func": "// On récupère les données de votre alerte originale\nlet data = msg.payload[0];\n// 1. Récupération des variables de configuration\nlet host = global.get(\"smtpHost\");\nlet port = global.get(\"smtpPort\");\nlet user = global.get(\"smtpUser\");\nlet pass = global.get(\"smtpPassword\");\nlet secure = global.get(\"smtpSecure\");\n\nmsg.email = {\n    host: host,\n    port: parseInt(port),\n    user: user,\n    pass: pass,\n    secure: secure // Toujours false pour MailHog\n};\n\nmsg.from = global.get(\"emailSender\");\n\n// On définit le sujet de l'email\nmsg.topic = \"ALERTE : lot \" + data.nom;\n\n// On définit le corps du message\nmsg.payload = \"Attention, le lot \" + data.nom + \n    \" a signalé une valeur critique de \" + data.valeu + \n    \". Veuillez vérifier le système.\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 480,
+        "wires": [
+            [
+                "a50a3114bc380864"
+            ]
         ]
     },
     {
@@ -1145,6 +1248,72 @@
         "wires": [
             [
                 "167e4c051c9ac36c"
+            ]
+        ]
+    },
+    {
+        "id": "443eeae254a1c29d",
+        "type": "e-mail",
+        "z": "3df317a692ac4ac1",
+        "server": "${SMTP_HOST}",
+        "port": "${SMTP_PORT}",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "${EMAIL_SENDER}",
+        "dname": "send email",
+        "x": 610,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "75d16d8ca582c294",
+        "type": "inject",
+        "z": "3df317a692ac4ac1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "4fe6d5af1464ec2b"
+            ]
+        ]
+    },
+    {
+        "id": "4fe6d5af1464ec2b",
+        "type": "function",
+        "z": "3df317a692ac4ac1",
+        "name": "Preparation de Email",
+        "func": "// 1. Récupération des variables de configuration\nlet host = global.get(\"smtpHost\");\nlet port = global.get(\"smtpPort\");\nlet user = global.get(\"smtpUser\");\nlet pass = global.get(\"smtpPassword\");\nlet secure = global.get(\"smtpSecure\");\n\nmsg.email = {\n    host: host,\n    port: parseInt(port),\n    user: user,\n    pass: pass,\n    secure: secure // Toujours false pour MailHog\n};\n\nmsg.from = global.get(\"emailSender\");\n\nmsg.topic = \"Alerte Capteur : \";\n\n// Le corps du message (Payload)\nmsg.payload = \"Attention, le capteur \";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 320,
+        "wires": [
+            [
+                "443eeae254a1c29d"
             ]
         ]
     }
